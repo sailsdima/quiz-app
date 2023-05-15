@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Quiz 360</string>
+    <string name="games_won">Games won:</string>
+    <string name="game_date">Game date:</string>
+    <string name="score">Score:</string>
+    <string name="questions_count">Questions count:</string>
+    <string name="correct_answers">Correct answers:</string>
+    <string name="wrong_answers">Wrong answers:</string>
+    <string name="game_duration">Game duration:</string>
+    <string name="current_score">Current Score:</string>
+    <string name="start_game">Start Game</string>
+    <string name="history">History</string>
+</resources>

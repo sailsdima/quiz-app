@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="4dp"
+    android:orientation="vertical"
+    app:cardBackgroundColor="#449A31"
+    app:cardCornerRadius="16dp"
+    app:contentPadding="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvGameStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="won" />
+
+        <TextView
+            android:id="@+id/tvFinishedAtLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/game_date"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvGameStatus" />
+
+        <TextView
+            android:id="@+id/tvFinishedAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvFinishedAtLabel"
+            app:layout_constraintStart_toEndOf="@id/tvFinishedAtLabel"
+            app:layout_constraintTop_toTopOf="@id/tvFinishedAtLabel"
+            tools:text="120" />
+
+        <TextView
+            android:id="@+id/tvGameScoreLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/score"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvFinishedAtLabel" />
+
+        <TextView
+            android:id="@+id/tvGameScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvGameScoreLabel"
+            app:layout_constraintStart_toEndOf="@id/tvGameScoreLabel"
+            app:layout_constraintTop_toTopOf="@id/tvGameScoreLabel"
+            tools:text="120" />
+
+        <TextView
+            android:id="@+id/tvQuestionsCountLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/questions_count"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvGameScoreLabel" />
+
+        <TextView
+            android:id="@+id/tvQuestionsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvQuestionsCountLabel"
+            app:layout_constraintStart_toEndOf="@id/tvQuestionsCountLabel"
+            app:layout_constraintTop_toTopOf="@id/tvQuestionsCountLabel"
+            tools:text="5" />
+
+        <TextView
+            android:id="@+id/tvCorrectAnswersCountLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/correct_answers"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvQuestionsCountLabel" />
+
+        <TextView
+            android:id="@+id/tvCorrectAnswersCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvCorrectAnswersCountLabel"
+            app:layout_constraintStart_toEndOf="@id/tvCorrectAnswersCountLabel"
+            app:layout_constraintTop_toTopOf="@id/tvCorrectAnswersCountLabel"
+            tools:text="5" />
+
+        <TextView
+            android:id="@+id/tvWrongAnswersCountLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/wrong_answers"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCorrectAnswersCountLabel" />
+
+        <TextView
+            android:id="@+id/tvWrongAnswersCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvWrongAnswersCountLabel"
+            app:layout_constraintStart_toEndOf="@id/tvWrongAnswersCountLabel"
+            app:layout_constraintTop_toTopOf="@id/tvWrongAnswersCountLabel"
+            tools:text="5" />
+
+        <TextView
+            android:id="@+id/tvGameDurationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/game_duration"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvWrongAnswersCountLabel" />
+
+        <TextView
+            android:id="@+id/tvGameDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvGameDurationLabel"
+            app:layout_constraintStart_toEndOf="@id/tvGameDurationLabel"
+            app:layout_constraintTop_toTopOf="@id/tvGameDurationLabel"
+            tools:text="5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

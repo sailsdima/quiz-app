@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Quiz 360</string>
+    <string name="games_won">Виграно ігор:</string>
+    <string name="game_date">Дата гри:</string>
+    <string name="score">Рахунок:</string>
+    <string name="questions_count">Кількість питань:</string>
+    <string name="correct_answers">Правильних відповідей:</string>
+    <string name="wrong_answers">Неправильних відповідей:</string>
+    <string name="game_duration">Тривалість гри:</string>
+    <string name="current_score">Поточний рахунок:</string>
+    <string name="start_game">Старт гри</string>
+    <string name="history">Історія</string>
+</resources>
