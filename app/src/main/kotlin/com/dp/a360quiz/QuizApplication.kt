@@ -1,7 +1,7 @@
 package com.dp.a360quiz
 
 import android.app.Application
-import com.dp.a360quiz.domain.usecase.synchronize.SynchronizeQuestionsUseCase
+import com.dp.domain.usecase.synchronize.SynchronizeQuestionsUseCase
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -25,7 +25,7 @@ class QuizApplication : Application() {
         }
 
         scope.launch {
-            synchronizeQuestionsUseCase.synchronizeDefaultQuestions()
+            synchronizeQuestionsUseCase()
         }
     }
 

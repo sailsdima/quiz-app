@@ -17,7 +17,7 @@ datastore = "1.1.1"
 # Testing
 kotest = "5.5.4"
 mockk = "1.13.1"
-coroutines-test = "1.9.0"
+coroutines = "1.9.0"
 robolectric = "4.11.1"
 junit = "4.13.2"
 
@@ -37,6 +37,9 @@ navigation = "2.8.4"
 
 # KSP
 ksp = "2.0.21-1.0.25"
+jetbrains-kotlin-jvm = "2.0.21"
+junit-version = "1.2.1"
+espresso-core = "3.6.1"
 
 [libraries]
 # Gradle
@@ -50,6 +53,10 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment-ktx" }
 lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime" }
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-runtime" }
+
+# Coroutines
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
 # Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
@@ -75,12 +82,14 @@ navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version.ref 
 
 # Testing Libraries
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines-test" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 junit = { module = "junit:junit", version.ref = "junit" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit-version" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 
 [plugins]
 # Android Gradle Plugins
@@ -93,3 +102,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 # Hilt
 hilt-android-gradle-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrains-kotlin-jvm" }

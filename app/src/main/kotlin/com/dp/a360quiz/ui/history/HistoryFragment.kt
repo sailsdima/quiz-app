@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dp.a360quiz.R
 import com.dp.a360quiz.databinding.FragmentHistoryBinding
-import com.dp.a360quiz.domain.model.wonGamesCount
+import com.dp.a360quiz.domain.usecase.wonGamesCount
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

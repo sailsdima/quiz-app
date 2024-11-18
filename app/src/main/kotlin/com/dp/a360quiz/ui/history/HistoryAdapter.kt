@@ -6,10 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.dp.a360quiz.common.util.convertMsToDateTime
 import com.dp.a360quiz.databinding.ItemHistoryBinding
-import com.dp.a360quiz.domain.model.*
 import com.dp.a360quiz.domain.usecase.GameSummaryStatus
+import com.dp.a360quiz.domain.usecase.gameSummaryStatus
+import com.dp.domain.model.GameSession
+import com.dp.domain.model.correctAnswersCount
+import com.dp.domain.model.incorrectAnswersCount
+import com.dp.domain.model.score
 
 private val diffCallback = object : DiffUtil.ItemCallback<GameSession>() {
     override fun areItemsTheSame(oldItem: GameSession, newItem: GameSession): Boolean {
@@ -40,7 +43,7 @@ class HistoryAdapter : ListAdapter<GameSession, HistoryAdapter.HistoryViewHolder
                 else Color.parseColor("#FF889F")
             )
             tvGameStatus.text = gameSession.gameSummaryStatus().name
-            tvFinishedAt.text = gameSession.finishedAt?.let { convertMsToDateTime(it) }
+            tvFinishedAt.text = gameSession.finishedAt.toString()
             tvGameScore.text = gameSession.score().toString()
             tvQuestionsCount.text = gameSession.questionsCount.toString()
             tvCorrectAnswersCount.text = gameSession.correctAnswersCount().toString()

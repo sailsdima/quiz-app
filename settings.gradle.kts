@@ -1,4 +1,3 @@
-
 pluginManagement {
     repositories {
         google()
@@ -18,4 +17,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Quiz360"
-include(":app")
+include(":app", ":domain", ":data", ":core", ":usecase")

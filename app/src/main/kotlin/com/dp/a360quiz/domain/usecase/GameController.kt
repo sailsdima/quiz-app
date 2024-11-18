@@ -1,7 +1,7 @@
 package com.dp.a360quiz.domain.usecase
 
-import com.dp.a360quiz.common.annotation.QuestionType
-import com.dp.a360quiz.domain.time.TimerState
+import com.dp.domain.model.QuestionType
+import com.dp.domain.model.timer.TimerState
 import kotlinx.coroutines.flow.Flow
 
 interface GameController {
