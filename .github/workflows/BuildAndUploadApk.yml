@@ -17,6 +17,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Setup Android SDK Tools
+        uses: android-actions/setup-android@v3.2.1
+
       - name: Build Debug Apk
         run: ./gradlew assembleDebug
 
