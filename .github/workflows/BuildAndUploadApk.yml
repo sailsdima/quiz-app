@@ -20,8 +20,8 @@ jobs:
       - name: Setup Android SDK Tools
         uses: android-actions/setup-android@v3.2.1
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
+      - name: Create Google Services Json
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }} > app/google-services.json"
 
       - name: Build Debug Apk
         run: ./gradlew assembleDebug
