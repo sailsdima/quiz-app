@@ -21,7 +21,10 @@ jobs:
         uses: android-actions/setup-android@v3.2.1
 
       - name: Create Google Services Json
-        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }} > app/google-services.json"
+        run: echo ${{ secrets.GOOGLE_SERVICES_JSON }} > app/google-services.json
+
+      - name: Cat services json
+        run: cat app/google-services.json
 
       - name: Build Debug Apk
         run: ./gradlew assembleDebug
