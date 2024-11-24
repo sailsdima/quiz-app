@@ -39,10 +39,6 @@ jobs:
 
       - name: upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
-        env:
-          FIREBASE_APP_ID: ${{ secrets.GOOGLE_SERVICES_JSON }}
-          FIREBASE_CREDENTIALS_FILE_CONTENT:
-        run: echo $FIREBASE_CREDENTIALS_FILE_CONTENT | base64 --decode ${{ secrets.FIREBASE_CREDENTIALS_FILE_CONTENT }}
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS_FILE_CONTENT }}
