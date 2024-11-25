@@ -14,8 +14,9 @@ import com.dp.domain.timer.QuizTimer
 import com.dp.domain.usecase.game.AddQuestionToGameUseCase
 import com.dp.domain.usecase.game.AddUserAnswerUseCase
 import com.dp.domain.usecase.game.CreateGameSessionUseCase
+import com.dp.domain.usecase.game.FinishGameSessionUseCase
 import com.dp.domain.usecase.game.GetGameSessionUseCase
-import com.dp.domain.usecase.game.UpdateGameSessionUseCase
+import com.dp.domain.usecase.game.StartGameSessionUseCase
 import com.dp.domain.usecase.question.GetNextRandomQuestionUseCase
 import com.dp.domain.usecase.question.IncrementQuestionShownTimesCountUseCase
 import com.dp.domain.usecase.score.IncreaseUserScoreUseCase
@@ -43,8 +44,9 @@ class GameControllerImpl @Inject constructor(
     private val addQuestionToGameUseCase: AddQuestionToGameUseCase,
     private val addUserAnswerUseCase: AddUserAnswerUseCase,
     private val getGameSessionUseCase: GetGameSessionUseCase,
-    private val updateGameSessionUseCase: UpdateGameSessionUseCase,
     private val createGameSessionUseCase: CreateGameSessionUseCase,
+    private val startGameSessionUseCase: StartGameSessionUseCase,
+    private val finishGameSessionUseCase: FinishGameSessionUseCase,
     private val quizTimerProvider: Provider<QuizTimer>,
     private val increaseUserScoreUseCase: IncreaseUserScoreUseCase,
 ) : GameController {
@@ -55,7 +57,7 @@ class GameControllerImpl @Inject constructor(
     private val _gameSessionIdFlow = MutableSharedFlow<Long>(replay = 1)
     private val gameSessionFlow: Flow<GameSession>
         get() = _gameSessionIdFlow.flatMapLatest { gameSessionId ->
-            getGameSessionUseCase.execute(gameSessionId)
+            getGameSessionUseCase(gameSessionId)
         }.onEach { logi("Game session updated $it") }
 
     private val _gameEventsFlow = MutableStateFlow<UIState>(UIState.PendingGame)
@@ -67,7 +69,7 @@ class GameControllerImpl @Inject constructor(
         get() = _gameTimerFlow
 
     override suspend fun createAndStartGame() {
-        val gameSessionId = createGameSessionUseCase.execute()
+        val gameSessionId = createGameSessionUseCase()
         _gameSessionIdFlow.emit(gameSessionId)
 
         supportTimer.startTimer(
@@ -80,7 +82,7 @@ class GameControllerImpl @Inject constructor(
     }
 
     private suspend fun startGame(gameSessionId: Long) {
-        updateGameSessionUseCase.startGame(gameSessionId)
+        startGameSessionUseCase(gameSessionId)
         val gameDuration = gameSessionFlow.first().timePerGameMs
 
         nextQuestion()
@@ -98,7 +100,7 @@ class GameControllerImpl @Inject constructor(
         val gameSession = gameSessionFlow.first()
         val question = gameSession.getQuestionById(questionId) ?: return
         val correctAnswerId = question.getCorrectAnswerId()
-        addUserAnswerUseCase.execute(gameSession, questionId, answerId)
+        addUserAnswerUseCase(gameSession, questionId, answerId)
 
         supportTimer.startTimer(
             timerTimeMs = DELAY_BETWEEN_QUESTIONS,
@@ -117,9 +119,9 @@ class GameControllerImpl @Inject constructor(
         }
         gameTimer.resume()
 
-        val question = getNextRandomQuestionUseCase.execute()
-        addQuestionToGameUseCase.execute(gameSession.id, question.id)
-        incrementQuestionShownTimesCountUseCase.execute(question.id)
+        val question = getNextRandomQuestionUseCase()
+        addQuestionToGameUseCase(gameSession.id, question.id)
+        incrementQuestionShownTimesCountUseCase(question.id)
 
         val questionsCount = gameSession.questionsCount
         val questionNumber = gameSession.questions.size + 1
@@ -150,8 +152,8 @@ class GameControllerImpl @Inject constructor(
             )
         )
 
-        updateGameSessionUseCase.finishGame(gameSession.id, gameDurationSec)
-        increaseUserScoreUseCase.increaseUserScoreBy(score)
+        finishGameSessionUseCase(gameSession.id, gameDurationSec)
+        increaseUserScoreUseCase(score)
 
         gameTimer.reset()
         supportTimer.reset()

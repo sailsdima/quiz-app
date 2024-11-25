@@ -3,8 +3,16 @@ package com.dp.domain.usecase.game
 import com.dp.domain.model.GameSession
 import kotlinx.coroutines.flow.Flow
 
-interface GetGameSessionUseCase {
+/**
+ * Use case to retrieve an existing game session.
+ */
+fun interface GetGameSessionUseCase {
 
-    fun execute(gameSessionId: Long): Flow<GameSession>
-
+    /**
+     * Retrieves a specific game session.
+     *
+     * @param gameSessionId The ID of the game session to retrieve.
+     * @return A flow of the game session.
+     */
+    operator fun invoke(gameSessionId: Long): Flow<GameSession>
 }

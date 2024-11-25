@@ -13,6 +13,6 @@ class HistoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     val gameHistoryFlow: Flow<List<GameSession>>
-        get() = getGamesHistoryUseCase.gameHistory
+        get() = getGamesHistoryUseCase()
 
 }
