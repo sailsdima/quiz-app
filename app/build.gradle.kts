@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
@@ -29,6 +31,16 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as BaseVariantOutputImpl }
+            .forEach { output ->
+                val outputFileName = "quiz-${variant.name}-${variant.versionName}-${variant.versionCode}.apk"
+                output.outputFileName = outputFileName
+            }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

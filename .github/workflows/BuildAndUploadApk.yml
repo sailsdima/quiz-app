@@ -35,12 +35,13 @@ jobs:
         uses: actions/upload-artifact@v4.4.3
         with:
           name: quiz-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/*.apk
 
       - name: Upload artifact to Firebase App Distribution
+        if: github.ref == 'refs/heads/main'
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIALS_FILE_CONTENT }}
-          file: app/build/outputs/apk/debug/app-debug.apk
+          file: app/build/outputs/apk/debug/*.apk
           groups: group1
