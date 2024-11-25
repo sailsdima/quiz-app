@@ -8,14 +8,14 @@ plugins {
 }
 
 android {
-    compileSdk = 35
+    compileSdk = property("compileSdk").toString().toInt()
 
     defaultConfig {
-        applicationId = "com.dp.a360quiz"
-        minSdk = 26
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = property("applicationId").toString()
+        minSdk = property("minSdk").toString().toInt()
+        targetSdk = property("targetSdk").toString().toInt()
+        versionCode = property("versionCode").toString().toInt()
+        versionName = property("versionName").toString()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -34,7 +34,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = property("jvmTarget").toString()
     }
     packaging {
         resources {

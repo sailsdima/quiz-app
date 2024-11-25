@@ -7,10 +7,10 @@ plugins {
 
 android {
     namespace = "com.dp.usecase"
-    compileSdk = 34
+    compileSdk = property("compileSdk").toString().toInt()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = property("minSdk").toString().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -30,7 +30,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = property("jvmTarget").toString()
     }
 }
 
