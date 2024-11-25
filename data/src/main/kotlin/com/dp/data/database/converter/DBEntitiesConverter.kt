@@ -22,15 +22,15 @@ object DBEntitiesConverter {
 
     fun DBQuestion.toQuestion(answers: List<DBAnswer>, category: DBCategory): Question {
         return Question(
-            id,
-            type,
-            category.toCategory(),
-            question,
-            difficulty,
-            createdAt,
-            updatedAt,
-            timesShown,
-            answers.toAnswers(),
+            id = id,
+            type = type,
+            category = category.toCategory(),
+            question = question,
+            difficulty = difficulty,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            timesShown = timesShown,
+            answers = answers.toAnswers(),
         )
     }
 
@@ -39,40 +39,40 @@ object DBEntitiesConverter {
     }
 
     private fun DBAnswer.toAnswer(): Answer {
-        return Answer(id, value, isCorrect)
+        return Answer(id = id, value = value, isCorrect = isCorrect)
     }
 
     private fun DBCategory.toCategory(): Category {
-        return Category(id, name)
+        return Category(id = id, name = name)
     }
 
     fun Question.toDBQuestion(categoryId: Long): DBQuestion {
         return DBQuestion(
-            id,
-            type,
-            categoryId,
-            question,
-            difficulty,
-            createdAt,
-            updatedAt,
-            timesShown,
+            id = id,
+            type = type,
+            categoryId = categoryId,
+            question = question,
+            difficulty = difficulty,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            timesShown = timesShown,
         )
     }
 
     fun List<Answer>.toDBAnswers(questionId: Long): List<DBAnswer> {
-        return map { it.toDBAnswer(questionId) }
+        return map { it.toDBAnswer(questionId = questionId) }
     }
 
     private fun Answer.toDBAnswer(questionId: Long): DBAnswer {
-        return DBAnswer(id, questionId, value, isCorrect)
+        return DBAnswer(id = id, questionId = questionId, value = value, isCorrect = isCorrect)
     }
 
     fun Category.toDBCategory(): DBCategory {
-        return DBCategory(id, name)
+        return DBCategory(id = id, name = name)
     }
 
     fun QuestionWithAnswers.toQuestion(): Question {
-        return question.toQuestion(answers, category)
+        return question.toQuestion(answers = answers, category = category)
     }
 
     fun List<QuestionWithAnswers>.toQuestions(): List<Question> {

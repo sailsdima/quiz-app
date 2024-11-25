@@ -24,5 +24,5 @@ class GetGameSessionUseCaseImpl @Inject constructor(
      * @return A flow of the game session.
      */
     override fun invoke(gameSessionId: Long): Flow<GameSession> =
-        gameSessionRepository.getGameSession(gameSessionId)
+        gameSessionRepository.getGameSession(gameSessionId = gameSessionId)
 }

@@ -10,8 +10,8 @@ import com.dp.a360quiz.data.dao.DBModelFactory.getCategory
 import com.dp.a360quiz.data.dao.DBModelFactory.getQuestion
 import com.dp.a360quiz.data.database.QuizDatabase
 import com.dp.a360quiz.data.database.dao.AnswerDao
-import com.dp.a360quiz.data.database.dao.CategoryDao
-import com.dp.a360quiz.data.database.dao.QuestionDao
+import com.dp.data.database.dao.CategoryDao
+import com.dp.data.database.dao.QuestionDao
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After

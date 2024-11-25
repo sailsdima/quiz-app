@@ -21,5 +21,5 @@ class IncrementQuestionShownTimesCountUseCaseImpl @Inject constructor(
      * @param questionId The ID of the question whose shown count will be incremented.
      */
     override suspend fun invoke(questionId: Long) =
-        questionRepository.incrementQuestionShownTimesCount(questionId)
+        questionRepository.incrementQuestionShownTimesCount(questionId = questionId)
 }

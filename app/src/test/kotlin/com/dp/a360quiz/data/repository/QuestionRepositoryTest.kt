@@ -4,8 +4,8 @@ import com.dp.a360quiz.KotestDispatcherRule
 import com.dp.a360quiz.data.coroutines.DispatcherProvider
 import com.dp.a360quiz.data.database.QuizDatabase
 import com.dp.a360quiz.data.database.dao.AnswerDao
-import com.dp.a360quiz.data.database.dao.CategoryDao
-import com.dp.a360quiz.data.database.dao.QuestionDao
+import com.dp.data.database.dao.CategoryDao
+import com.dp.data.database.dao.QuestionDao
 import com.dp.a360quiz.domain.repository.QuestionRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldBeIn

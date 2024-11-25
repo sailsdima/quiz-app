@@ -1,7 +1,7 @@
 package com.dp.data.di
 
-import com.dp.data.default_data.DefaultQuestionsProviderImpl
-import com.dp.domain.repository.DefaultQuestionsProvider
+import com.dp.data.repository.DefaultQuestionRepositoryImpl
+import com.dp.domain.repository.DefaultQuestionRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,5 +12,5 @@ import dagger.hilt.components.SingletonComponent
 interface DefaultDataModule {
 
     @Binds
-    fun bindDefaultQuestionsProvider(provider: DefaultQuestionsProviderImpl): DefaultQuestionsProvider
+    fun bindDefaultQuestionsProvider(provider: DefaultQuestionRepositoryImpl): DefaultQuestionRepository
 }

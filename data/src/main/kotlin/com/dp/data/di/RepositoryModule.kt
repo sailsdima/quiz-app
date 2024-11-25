@@ -1,9 +1,9 @@
 package com.dp.data.di
 
-import com.dp.data.repository.AppPreferencesRepositoryImpl
+import com.dp.data.repository.UserDataRepositoryImpl
 import com.dp.data.repository.GameSessionRepositoryImpl
 import com.dp.data.repository.QuestionRepositoryImpl
-import com.dp.domain.repository.AppPreferencesRepository
+import com.dp.domain.repository.UserDataRepository
 import com.dp.domain.repository.GameSessionRepository
 import com.dp.domain.repository.QuestionRepository
 import dagger.Binds
@@ -26,6 +26,6 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindAppPreferencesRepository(repository: AppPreferencesRepositoryImpl): AppPreferencesRepository
+    fun bindAppPreferencesRepository(repository: UserDataRepositoryImpl): UserDataRepository
 
 }

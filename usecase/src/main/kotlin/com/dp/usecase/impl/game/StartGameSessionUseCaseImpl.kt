@@ -26,7 +26,7 @@ class StartGameSessionUseCaseImpl @Inject constructor(
      */
     override suspend fun invoke(gameSessionId: Long) {
         gameSessionRepository.updateGameSession(
-            gameSessionId,
+            gameSessionId = gameSessionId,
             newGameStatus = GameStatus.STARTED,
             newStartedAt = currentTimeProvider.currentTime
         )

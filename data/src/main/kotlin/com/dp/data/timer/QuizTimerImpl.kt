@@ -3,10 +3,8 @@ package com.dp.data.timer
 import com.dp.core.di.AppCoroutineScope
 import com.dp.domain.model.timer.TimerState
 import com.dp.domain.time.CurrentTimeProvider
-import com.dp.domain.timer.DEFAULT_STEP_DELAY_MS
-import com.dp.domain.timer.DEFAULT_TIMER_FINISH_TIME
-import com.dp.domain.timer.MS_IN_SEC
 import com.dp.domain.timer.QuizTimer
+import com.dp.domain.timer.QuizTimerConstants
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -18,12 +16,23 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import timber.log.Timber
+import java.time.Duration
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
-import kotlin.math.ceil
 
+private const val DEFAULT_TIME_PASSED = 0L
+private const val SECONDS_IN_MILLIS = 1000L
+
+/**
+ * Implementation of [QuizTimer] that provides a timer with start, pause, resume, and reset functionalities.
+ * The timer emits updates on its state via a [Flow].
+ *
+ * @property currentTimeProvider Provides the current time for timer calculations.
+ * @property coroutineScope Scope in which timer-related coroutines are launched.
+ */
 class QuizTimerImpl @Inject constructor(
     private val currentTimeProvider: CurrentTimeProvider,
     @AppCoroutineScope private val coroutineScope: CoroutineScope,
@@ -33,70 +42,110 @@ class QuizTimerImpl @Inject constructor(
 
     private val _timerFlow = MutableSharedFlow<TimerState>()
 
-    private var timerFinishTime = DEFAULT_TIMER_FINISH_TIME
-    private var stepDelayMs = DEFAULT_STEP_DELAY_MS
+    private var timerFinishTime = QuizTimerConstants.defaultTimerFinishTime
+    private var stepDelay = QuizTimerConstants.defaultStepDelay
+
+    private val lastTimerTime = AtomicReference<Duration?>(null)
+    private val timeLeft = AtomicReference<Duration?>(null)
 
     private val isPaused = AtomicBoolean(false)
-    private val lastTimerTime = AtomicReference<Long?>(null)
     private val startedAt = AtomicReference<Long?>(null)
-    private val timeLeftMs = AtomicReference<Long?>(null)
-    private val _timePassed = AtomicLong(0)
+    private val _timePassed = AtomicLong(DEFAULT_TIME_PASSED)
 
+    /**
+     * The total time passed in seconds since the timer started.
+     */
     override val timePassedSec: Long
-        get() = _timePassed.get() / MS_IN_SEC
+        get() = _timePassed.get() / SECONDS_IN_MILLIS
 
+    /**
+     * Starts the timer with the specified parameters.
+     *
+     * @param timerTime The initial duration for the timer.
+     * @param finishTime The duration at which the timer should finish.
+     * @param stepDelay The delay between timer updates.
+     * @return A flow emitting [TimerState] updates.
+     */
     override fun startTimer(
-        timerTimeMs: Long,
-        finishTime: Long,
-        stepDelayMs: Long,
+        timerTime: Duration,
+        finishTime: Duration,
+        stepDelay: Duration,
     ): Flow<TimerState> {
         _timePassed.set(0)
         this.timerFinishTime = finishTime
-        this.stepDelayMs = stepDelayMs
+        this.stepDelay = stepDelay
 
-        startTimerInternal(timerTimeMs)
+        startTimerInternal(timerTime = timerTime)
         return _timerFlow
     }
 
-    private fun startTimerInternal(timerTimeMs: Long) {
-        if (isPaused.get() || timerTimeMs < timerFinishTime) {
-//            loge("Can not start timer as given time $timerTimeMs is less then $timerFinishTime OR timer is already running (isPaused: $isPaused)")
+    /**
+     * Initializes and starts the timer's internal state.
+     *
+     * @param timerTime The total duration of the timer.
+     */
+    private fun startTimerInternal(timerTime: Duration) {
+        if (isPaused.get() || timerTime < timerFinishTime) {
+            Timber.d("Cannot start timer as given time $timerTime is less than $timerFinishTime OR timer is already running (isPaused: $isPaused)")
             return
         }
         cancelTimer()
 
-        val initialDelay = timerTimeMs % stepDelayMs
-
-        lastTimerTime.set(timerTimeMs)
+        val initialDelay = Duration.ofMillis(timerTime.toMillis() % stepDelay.toMillis())
+        lastTimerTime.set(timerTime)
         startedAt.set(currentTimeProvider.elapsedTime)
-        val timerInterval = (timerTimeMs - initialDelay downTo timerFinishTime step stepDelayMs)
+
+        val timerInterval = generateSequence(seed = timerTime) { it.minus(stepDelay) }
+            .takeWhile { it >= timerFinishTime }
+
         timerJob = timerInterval.asFlow()
-            .onStart {
-                postTimerStarted(timeLeftMs = timerTimeMs)
-                delay(initialDelay)
-                _timePassed.addAndGet(initialDelay)
-            }
-            .onEach { timeLeftMs ->
-                postTimerProgress(timeLeftMs)
-                delay(stepDelayMs)
-                _timePassed.addAndGet(stepDelayMs)
-//                logi("onEach $timeLeftMs")
-            }
-            .onCompletion { error ->
-//                logi("onCompletion $error")
-                error?.let {
-                    postTimerPaused(timeLeftMs.get())
-                } ?: run {
-                    postTimerFinished(timeLeftMs.get())
-                    reset()
-                }
-            }
+            .onStart { initializeTimer(initialDelay = initialDelay, timerTime = timerTime) }
+            .onEach { tick(timeLeft = it) }
+            .onCompletion { handleCompletion(cause = it) }
             .launchIn(coroutineScope)
     }
 
+    /**
+     * Initializes the timer by emitting the started state and applying the initial delay.
+     *
+     * @param initialDelay The initial delay before the timer starts ticking.
+     * @param timerTime The total duration of the timer.
+     */
+    private suspend fun initializeTimer(initialDelay: Duration, timerTime: Duration) {
+        postTimerStarted(timeLeft = timerTime)
+        delay(timeMillis = initialDelay.toMillis())
+        _timePassed.addAndGet(initialDelay.toMillis())
+    }
+
+    /**
+     * Emits a timer progress update and applies the step delay.
+     *
+     * @param timeLeft The remaining duration for the timer.
+     */
+    private suspend fun tick(timeLeft: Duration) {
+        postTimerProgress(timeLeft = timeLeft)
+        delay(timeMillis = stepDelay.toMillis())
+        _timePassed.addAndGet(stepDelay.toMillis())
+    }
+
+    /**
+     * Handles the completion of the timer, emitting the appropriate state and resetting.
+     *
+     * @param cause The cause of the timer completion, if any.
+     */
+    private suspend fun handleCompletion(cause: Throwable?) {
+        cause?.let {
+            postTimerPaused(timeLeft.get())
+        } ?: postTimerFinished(timeLeft.get())
+        reset()
+    }
+
+    /**
+     * Pauses the timer and calculates the remaining time.
+     */
     override fun pause() {
         if (isPaused.get()) {
-//            logi("Timer is already paused")
+            Timber.d("Timer is already paused")
             return
         }
 
@@ -107,46 +156,82 @@ class QuizTimerImpl @Inject constructor(
         val lastTimerTime = lastTimerTime.get() ?: return
 
         val pausedAt = currentTimeProvider.elapsedTime
-        timeLeftMs.set(lastTimerTime - (pausedAt - startedAt))
+        val elapsedSinceStart = Duration.ofMillis(pausedAt - startedAt)
 
-//        logd("Timer pause. timeLeftMs = $timeLeftMs.")
+        timeLeft.set(lastTimerTime.minus(elapsedSinceStart))
+
+        Timber.d("Timer paused. Time left: ${timeLeft.get()}")
     }
 
+    /**
+     * Resumes the timer from its paused state.
+     */
     override fun resume() {
-        if (!isPaused.get()) return
-        val timeLeftMs = timeLeftMs.get() ?: return
+        if (!isPaused.get()) {
+            Timber.d("Cannot resume as the timer is not paused")
+            return
+        }
 
-//        logi("Timer resume. Remaining time $timeLeftMs")
+        val remainingTime = timeLeft.get() ?: return
+        Timber.d("Resuming timer with remaining time: $remainingTime")
+
         isPaused.set(false)
-        startTimerInternal(timeLeftMs)
+        startTimerInternal(timerTime = remainingTime)
     }
 
+    /**
+     * Resets the timer to its initial state.
+     */
     override fun reset() {
-//        logi("Timer reset")
+        Timber.d("Resetting timer")
         cancelTimer()
         startedAt.set(null)
         lastTimerTime.set(null)
+        timeLeft.set(null)
         isPaused.set(false)
+        _timePassed.set(0)
     }
 
-    private suspend fun postTimerStarted(timeLeftMs: Long) {
-        _timerFlow.emit(TimerState.Started(ceil(timeLeftMs / MS_IN_SEC.toFloat()).toLong()))
+    /**
+     * Emits the started state of the timer.
+     *
+     * @param timeLeft The remaining duration for the timer.
+     */
+    private suspend fun postTimerStarted(timeLeft: Duration) {
+        _timerFlow.emit(TimerState.Started(time = timeLeft.seconds))
     }
 
-    private suspend fun postTimerProgress(timeLeftMs: Long) {
-        _timerFlow.emit(TimerState.Progress(ceil(timeLeftMs / MS_IN_SEC.toFloat()).toLong()))
+    /**
+     * Emits the progress state of the timer.
+     *
+     * @param timeLeft The remaining duration for the timer.
+     */
+    private suspend fun postTimerProgress(timeLeft: Duration) {
+        _timerFlow.emit(TimerState.Progress(time = timeLeft.seconds))
     }
 
-    private suspend fun postTimerPaused(timeLeftMs: Long?) {
-        _timerFlow.emit(TimerState.Paused(timeLeftMs ?: 0))
+    /**
+     * Emits the paused state of the timer.
+     *
+     * @param timeLeft The remaining duration for the timer, if available.
+     */
+    private suspend fun postTimerPaused(timeLeft: Duration?) {
+        _timerFlow.emit(TimerState.Paused(time = timeLeft?.seconds ?: 0))
     }
 
-    private suspend fun postTimerFinished(timeLeftMs: Long?) {
-        _timerFlow.emit(TimerState.Finished(timeLeftMs ?: 0))
+    /**
+     * Emits the finished state of the timer.
+     *
+     * @param timeLeft The remaining duration for the timer, if available.
+     */
+    private suspend fun postTimerFinished(timeLeft: Duration?) {
+        _timerFlow.emit(TimerState.Finished(time = timeLeft?.seconds ?: 0))
     }
 
+    /**
+     * Cancels the current timer job.
+     */
     private fun cancelTimer() {
         timerJob?.cancel(CancellationException("Timer has been cancelled"))
     }
-
 }

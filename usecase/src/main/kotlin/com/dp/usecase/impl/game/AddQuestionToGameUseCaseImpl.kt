@@ -23,5 +23,8 @@ class AddQuestionToGameUseCaseImpl @Inject constructor(
      * @param questionId The ID of the question to add.
      */
     override suspend fun invoke(gameSessionId: Long, questionId: Long) =
-        gameSessionRepository.addQuestionToGame(gameSessionId, questionId)
+        gameSessionRepository.addQuestionToGame(
+            gameSessionId = gameSessionId,
+            questionId = questionId
+        )
 }

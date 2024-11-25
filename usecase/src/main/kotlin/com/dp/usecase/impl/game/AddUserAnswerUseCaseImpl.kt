@@ -34,7 +34,7 @@ class AddUserAnswerUseCaseImpl @Inject constructor(
      */
     override suspend fun invoke(gameSession: GameSession, questionId: Long, answerId: Long) {
         val correctAnswerId = gameSession
-            .getQuestionById(questionId)
+            .getQuestionById(questionId = questionId)
             ?.getCorrectAnswerId()
             ?: throw Exception("Question with ID $questionId not found") // TODO
 

@@ -1,6 +1,6 @@
 package com.dp.usecase.impl.app_preferences
 
-import com.dp.domain.repository.AppPreferencesRepository
+import com.dp.domain.repository.UserDataRepository
 import com.dp.domain.usecase.app_preferences.GetMistakesAllowedCountUseCase
 import com.dp.domain.usecase.app_preferences.GetQuestionsCountUseCase
 import com.dp.domain.usecase.app_preferences.GetSavedQuestionsVersionUseCase
@@ -15,28 +15,28 @@ import javax.inject.Inject
  * from the repository.
  */
 class GetSavedQuestionsVersionUseCaseImpl @Inject constructor(
-    private val appPreferencesRepository: AppPreferencesRepository,
+    private val userDataRepository: UserDataRepository,
 ) : GetSavedQuestionsVersionUseCase {
     /**
      * Retrieves the saved questions version from the repository.
      *
      * @return The saved questions version.
      */
-    override suspend fun invoke(): Int = appPreferencesRepository.getSavedQuestionsVersion()
+    override suspend fun invoke(): Int = userDataRepository.getSavedQuestionsVersion()
 }
 
 /**
  * Implementation of [GetUserScoreUseCase] that fetches the user's score from the repository.
  */
 class GetUserScoreUseCaseImpl @Inject constructor(
-    private val appPreferencesRepository: AppPreferencesRepository,
+    private val userDataRepository: UserDataRepository,
 ) : GetUserScoreUseCase {
     /**
      * Retrieves the user's score from the repository.
      *
      * @return The user's current score.
      */
-    override suspend fun invoke(): Int = appPreferencesRepository.getUserScore()
+    override suspend fun invoke(): Int = userDataRepository.getUserScore()
 }
 
 /**
@@ -44,14 +44,14 @@ class GetUserScoreUseCaseImpl @Inject constructor(
  * the repository.
  */
 class GetUserScoreFlowUseCaseImpl @Inject constructor(
-    private val appPreferencesRepository: AppPreferencesRepository,
+    private val userDataRepository: UserDataRepository,
 ) : GetUserScoreFlowUseCase {
     /**
      * Retrieves the flow of the user's score from the repository.
      *
      * @return A flow representing the user's score.
      */
-    override fun invoke(): Flow<Int> = appPreferencesRepository.userScoreFlow
+    override fun invoke(): Flow<Int> = userDataRepository.userScoreFlow
 }
 
 /**
@@ -59,14 +59,14 @@ class GetUserScoreFlowUseCaseImpl @Inject constructor(
  * milliseconds) from the repository.
  */
 class GetTimePerGameMsUseCaseImpl @Inject constructor(
-    private val appPreferencesRepository: AppPreferencesRepository,
+    private val userDataRepository: UserDataRepository,
 ) : GetTimePerGameMsUseCase {
     /**
      * Retrieves the time allowed per game from the repository.
      *
      * @return The time per game in milliseconds.
      */
-    override suspend fun invoke(): Long = appPreferencesRepository.getTimePerGameMs()
+    override suspend fun invoke(): Long = userDataRepository.getTimePerGameMs()
 }
 
 /**
@@ -74,14 +74,14 @@ class GetTimePerGameMsUseCaseImpl @Inject constructor(
  * from the repository.
  */
 class GetQuestionsCountUseCaseImpl @Inject constructor(
-    private val appPreferencesRepository: AppPreferencesRepository,
+    private val userDataRepository: UserDataRepository,
 ) : GetQuestionsCountUseCase {
     /**
      * Retrieves the total number of questions from the repository.
      *
      * @return The number of questions.
      */
-    override suspend fun invoke(): Int = appPreferencesRepository.getQuestionsCount()
+    override suspend fun invoke(): Int = userDataRepository.getQuestionsCount()
 }
 
 /**
@@ -89,12 +89,12 @@ class GetQuestionsCountUseCaseImpl @Inject constructor(
  * from the repository.
  */
 class GetMistakesAllowedCountUseCaseImpl @Inject constructor(
-    private val appPreferencesRepository: AppPreferencesRepository,
+    private val userDataRepository: UserDataRepository,
 ) : GetMistakesAllowedCountUseCase {
     /**
      * Retrieves the number of allowed mistakes from the repository.
      *
      * @return The number of allowed mistakes.
      */
-    override suspend fun invoke(): Int = appPreferencesRepository.getMistakesAllowedCount()
+    override suspend fun invoke(): Int = userDataRepository.getMistakesAllowedCount()
 }

@@ -1,8 +1,8 @@
 package com.dp.usecase.impl.synchronize
 
 import com.dp.domain.model.Question
-import com.dp.domain.repository.AppPreferencesRepository
-import com.dp.domain.repository.DefaultQuestionsProvider
+import com.dp.domain.repository.UserDataRepository
+import com.dp.domain.repository.DefaultQuestionRepository
 import com.dp.domain.repository.QuestionRepository
 import com.dp.domain.usecase.synchronize.SynchronizeQuestionsUseCase
 import javax.inject.Inject
@@ -13,13 +13,13 @@ import javax.inject.Inject
  * This implementation retrieves the current questions from the provider, compares them with
  * the saved questions, and updates the database with any new or removed questions.
  *
- * @param defaultQuestionsProvider The provider of the default questions to be synchronized.
- * @param appPreferencesRepository Repository for storing app preferences, such as saved questions version.
+ * @param defaultQuestionRepository The provider of the default questions to be synchronized.
+ * @param userDataRepository Repository for storing app preferences, such as saved questions version.
  * @param questionRepository Repository responsible for saving, updating, and deleting questions.
  */
 class SynchronizeQuestionsUseCaseImpl @Inject constructor(
-    private val defaultQuestionsProvider: DefaultQuestionsProvider,
-    private val appPreferencesRepository: AppPreferencesRepository,
+    private val defaultQuestionRepository: DefaultQuestionRepository,
+    private val userDataRepository: UserDataRepository,
     private val questionRepository: QuestionRepository
 ) : SynchronizeQuestionsUseCase {
 
@@ -29,20 +29,22 @@ class SynchronizeQuestionsUseCaseImpl @Inject constructor(
      */
     override suspend fun invoke() {
         // Get the saved questions version from preferences
-        val savedQuestionsVersion = appPreferencesRepository.getSavedQuestionsVersion()
+        val savedQuestionsVersion = userDataRepository.getSavedQuestionsVersion()
 
         // Fetch new questions based on the saved version
-        val newQuestions = defaultQuestionsProvider.getNewQuestions(savedQuestionsVersion)
+        val newQuestions = defaultQuestionRepository.fetchUpdatedQuestionsIfAvailable(
+            lastSavedVersion = savedQuestionsVersion
+        )
 
         newQuestions?.questions?.let { actualQuestions ->
             // Remove deleted questions from the database
-            removeDeletedQuestions(actualQuestions)
+            removeDeletedQuestions(actualQuestions = actualQuestions)
 
             // Update or insert the new questions in the repository
-            questionRepository.upsertQuestions(actualQuestions)
+            questionRepository.upsertQuestions(questions = actualQuestions)
 
             // Save the new version number to preferences
-            appPreferencesRepository.saveLastQuestionsVersion(newQuestions.version)
+            userDataRepository.saveLastQuestionsVersion(version = newQuestions.version)
         }
     }
 
@@ -59,6 +61,6 @@ class SynchronizeQuestionsUseCaseImpl @Inject constructor(
         val questionIdsToDelete = savedQuestionsIds.subtract(actualQuestions.map { it.id }.toSet())
 
         // Delete the questions that are no longer present
-        questionRepository.deleteQuestions(questionIdsToDelete)
+        questionRepository.deleteQuestions(questionIds = questionIdsToDelete)
     }
 }

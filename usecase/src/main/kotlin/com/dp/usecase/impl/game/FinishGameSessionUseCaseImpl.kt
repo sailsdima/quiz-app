@@ -28,7 +28,7 @@ class FinishGameSessionUseCaseImpl @Inject constructor(
      */
     override suspend fun invoke(gameSessionId: Long, gameDuration: Long) {
         gameSessionRepository.updateGameSession(
-            gameSessionId,
+            gameSessionId = gameSessionId,
             newGameStatus = GameStatus.FINISHED,
             newFinishedAt = currentTimeProvider.currentTime,
             newGameDuration = gameDuration

@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.takeWhile
+import java.time.Duration
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -165,7 +166,7 @@ class GameControllerImpl @Inject constructor(
         doAfter: suspend () -> Unit
     ) = coroutineScope {
         reset()
-        startTimer(timerTimeMs)
+        startTimer(Duration.ofMillis(timerTimeMs))
             .takeWhile { it !is TimerState.Finished }
             .onEach { timerState -> onTick(timerState) }
             .onCompletion { doAfter() }
