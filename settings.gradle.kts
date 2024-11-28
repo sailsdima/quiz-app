@@ -17,4 +17,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Quiz360"
-include(":app", ":domain", ":data", ":core", ":usecase")
+include(":app", ":domain", ":data", ":core", ":usecase", ":presentation")

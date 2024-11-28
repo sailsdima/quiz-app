@@ -15,10 +15,10 @@ room = "2.6.1"
 datastore = "1.1.1"
 
 # Testing
-kotest = "5.5.4"
-mockk = "1.13.1"
+kotest = "5.9.1"
+mockk = "1.13.12"
 coroutines = "1.9.0"
-robolectric = "4.11.1"
+robolectric = "4.13"
 junit = "4.13.2"
 
 # Core Libraries
@@ -38,13 +38,21 @@ navigation = "2.8.4"
 # KSP
 ksp = "2.0.21-1.0.25"
 jetbrains-kotlin-jvm = "2.0.21"
-junit-version = "1.2.1"
-espresso-core = "3.6.1"
 
 # Google Services
 google-services = "4.4.2"
 firebase-crashlytics = "3.0.2"
 firebase-bom = "33.6.0"
+
+# Compose
+compose-bom = "2024.11.00"
+compose-viewmodel = "2.8.7"
+compose-navigation = "2.8.4"
+compose-google-fonts = "1.7.5"
+compose-activity = "1.9.3"
+
+# State Machine
+tinder-statemachine = "0.2.0"
 
 [libraries]
 # Gradle
@@ -93,13 +101,24 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit-version" }
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+
+# Compose
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose-viewmodel" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
+compose-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "compose-google-fonts" }
+compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity" }
+
+# State Machine
+tinder-statemachine = { module = "com.tinder.statemachine:statemachine", version.ref = "tinder-statemachine" }
 
 [plugins]
 # Android Gradle Plugins
@@ -117,3 +136,6 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrai
 # Google Services
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
+
+# Compose
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

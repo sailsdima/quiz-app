@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
@@ -7,6 +5,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -44,14 +43,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
-    }
     namespace = "com.dp.a360quiz"
 
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        compose = true
     }
 }
 
@@ -59,6 +56,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":usecase"))
+    implementation(project(":presentation"))
 
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
@@ -66,6 +64,9 @@ dependencies {
     implementation(libs.fragment.ktx)
     implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.viewmodel)
+
+    // Compose
+    implementation(libs.compose.activity)
 
     // Navigation
     implementation(libs.navigation.runtime)
